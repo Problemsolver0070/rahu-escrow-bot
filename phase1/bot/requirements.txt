@@ -1,0 +1,9 @@
+python-telegram-bot>=20.7
+python-dotenv>=1.0.1
+motor==3.3.1
+pymongo==4.5.0
+pydantic>=2.6.4
+cryptography>=42.0.8
+aiohttp>=3.8.0
+base58>=2.1.0
+pycryptodome>=3.18.0

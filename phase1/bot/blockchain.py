@@ -32,12 +32,14 @@ class BlockchainAPI:
         NetworkType.BTC: {
             "base_url": "https://api.blockcypher.com/v1/btc/main",
             "rate_limit": 3,  # requests per second
-            "hourly_limit": 200
+            "hourly_limit": 200,
+            "token": os.getenv("BLOCKCYPHER_TOKEN", None)
         },
         NetworkType.LTC: {
             "base_url": "https://api.blockcypher.com/v1/ltc/main", 
             "rate_limit": 3,
-            "hourly_limit": 200
+            "hourly_limit": 200,
+            "token": os.getenv("BLOCKCYPHER_TOKEN", None)
         },
         NetworkType.ETH: {
             "base_url": "https://api.etherscan.io/api",
@@ -49,13 +51,14 @@ class BlockchainAPI:
             "base_url": "https://api.bscscan.com/api",
             "rate_limit": 5,
             "hourly_limit": 100000,
-            "api_key": os.getenv("BSCSCAN_API_KEY", "YourApiKeyToken"),
+            "api_key": os.getenv("ETHERSCAN_API_KEY", "YourApiKeyToken"),  # Using same Etherscan V2 key
             "contract": "0x55d398326f99059fF775485246999027B3197955"  # USDT BSC contract
         },
         NetworkType.USDT_TRC20: {
             "base_url": "https://api.trongrid.io",
             "rate_limit": 100,  # Very generous
-            "contract": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"  # USDT TRC20 contract
+            "contract": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",  # USDT TRC20 contract
+            "api_key": os.getenv("TRONGRID_API_KEY", None)
         }
     }
     
@@ -78,12 +81,22 @@ class BlockchainAPI:
         
         api_config = self.APIS[network]
         base_url = api_config["base_url"]
+        headers = {}
         
-        # Add API key if required
-        if "api_key" in api_config:
-            if params is None:
-                params = {}
+        if params is None:
+            params = {}
+        
+        # Add API key for Etherscan/BSCScan style APIs
+        if "api_key" in api_config and api_config["api_key"]:
             params["apikey"] = api_config["api_key"]
+        
+        # Add token for BlockCypher APIs
+        if "token" in api_config and api_config["token"]:
+            params["token"] = api_config["token"]
+        
+        # Add API key for TronGrid in headers
+        if network == NetworkType.USDT_TRC20 and "api_key" in api_config and api_config["api_key"]:
+            headers["TRON-PRO-API-KEY"] = api_config["api_key"]
         
         # Rate limiting (simple implementation)
         await asyncio.sleep(1.0 / api_config["rate_limit"])
@@ -91,7 +104,7 @@ class BlockchainAPI:
         url = f"{base_url}/{endpoint}" if not endpoint.startswith("http") else endpoint
         
         try:
-            async with self.session.get(url, params=params) as response:
+            async with self.session.get(url, params=params, headers=headers) as response:
                 if response.status == 200:
                     return await response.json()
                 else:

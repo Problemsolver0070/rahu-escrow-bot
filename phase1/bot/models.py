@@ -236,7 +236,8 @@ class DatabaseManager:
     
     async def update_group_status(self, group_id: str, status: GroupStatus, **kwargs) -> bool:
         """Update group status with luxury precision"""
-        updates = {"status": status}
+        status_value = status.value if hasattr(status, 'value') else status
+        updates = {"status": status_value}
         updates.update(kwargs)
         
         result = await self.db.groups.update_one(
@@ -296,6 +297,11 @@ class DatabaseManager:
     async def get_deal_by_group_id(self, group_id: str) -> Optional[Deal]:
         """Retrieve deal by group ID"""
         deal_data = await self.db.deals.find_one({"group_id": group_id})
+        return Deal(**deal_data) if deal_data else None
+    
+    async def get_deal_by_id(self, deal_id: str) -> Optional[Deal]:
+        """Retrieve deal by deal ID"""
+        deal_data = await self.db.deals.find_one({"id": deal_id})
         return Deal(**deal_data) if deal_data else None
     
     async def update_deal(self, deal_id: str, updates: Dict) -> bool:
