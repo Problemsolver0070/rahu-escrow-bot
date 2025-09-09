@@ -1,3 +1,28 @@
+# 🚀 Rahu Escrow Bot — Phase 1: Production Ready
+
+**Live, real blockchain escrow system** — supports BTC, LTC, ETH, USDT-BEP20, USDT-TRC20.
+
+> ✅ Real wallet generation  
+> ✅ Real blockchain monitoring  
+> ✅ Real deposit detection  
+> ✅ Real mod/admin commands  
+> ✅ Real audit logs  
+> ✅ Real luxury UX
+
+---
+
+## 🗂️ Phase Structure
+
+- `phase0/` — Luxury Skeleton (v0.0.1)
+- `phase1/` — **Production Blockchain Engine (v1.0.0)** ← YOU ARE HERE
+- `phase2/` — God Mode Activation (Coming Soon)
+
+---
+
+## 🛠️ Deploy Phase 1
+
+See `phase1/BLOCKCHAIN_SETUP.md` for API key setup.
+
 # 👑 Rahu Escrow Bot - Phase 0: The Luxury Skeleton
 
 ## 🌟 Overview
