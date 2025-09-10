@@ -56,6 +56,11 @@ class User(BaseModel):
     is_banned: bool = False
     is_moderator: bool = False
     is_admin: bool = False
+    # Individual moderator permissions (Phase 2: God Mode)
+    can_ban: bool = True  # Default permission for moderators
+    can_freeze: bool = True  # Default permission for moderators
+    can_broadcast: bool = False  # Restricted permission
+    can_edit_fees: bool = False  # Restricted permission
     created_at: datetime = Field(default_factory=datetime.utcnow)
     last_active: datetime = Field(default_factory=datetime.utcnow)
     deals_count: int = 0
